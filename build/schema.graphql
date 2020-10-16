@@ -1,0 +1,23 @@
+type Investor @entity {
+id: ID!
+advisors: [Advisor!]!
+stablePoolShare: BigInt!
+volatilePoolShare: BigInt!
+}
+
+type Advisor @entity {
+id: ID!
+stablePool: Bytes!
+volatilePool: Bytes!
+investors: [Investor!]!
+stablePoolToken: Bytes!
+volatilePoolToken: Bytes!
+stablePoolShare: BigInt!
+volatilePoolShare: BigInt!
+mstableShare: BigInt!
+yearnShare: BigInt!
+stablePoolMStableProportion: BigInt!
+stablePoolYearnProportion: BigInt!
+fees: BigInt!
+}
+
