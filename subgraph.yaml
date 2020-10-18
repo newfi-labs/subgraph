@@ -8,7 +8,7 @@ dataSources:
     name: NewfiAdvisor
     network: mainnet
     source:
-      address: '0x5d73813c46a88B8002Adef0982e51d8b0624B464'
+      address: '0x1dFd8c77616b1c4Db2FaE35Ce8704950dA16B99d'
       abi: NewfiAdvisor
     mapping:
       kind: ethereum/events
@@ -20,7 +20,7 @@ dataSources:
         - name: NewfiAdvisor
           file: ./abis/NewfiAdvisor.json
       eventHandlers:
-        - event: AdvisorOnBoarded(indexed address,string,indexed address,indexed address,address,address,uint256,uint256,uint256,uint256)
+        - event: AdvisorOnBoarded(indexed address,string,indexed address,indexed address,address,address,uint256,uint256)
           handler: handleAdvisorOnBoarded
         - event: Investment(indexed address,uint256,uint256,indexed address)
           handler: handleInvestment

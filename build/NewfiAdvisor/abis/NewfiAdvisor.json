@@ -1,31 +1,5 @@
 [
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_stableproxy",
-        "type": "address"
-      },
-      {
-        "internalType": "address payable",
-        "name": "_volatileproxy",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_massetAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_savingsContract",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
     "anonymous": false,
     "inputs": [
       {
@@ -67,25 +41,13 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "stablePoolShare",
+        "name": "volatileProtocolStableCoinProportion",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "volatilePoolShare",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "mstableInvestmentProportion",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "yearnInvestmentProportion",
+        "name": "volatileProtocolVolatileCoinProportion",
         "type": "uint256"
       }
     ],
@@ -184,56 +146,35 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "account",
         "type": "address"
       }
     ],
-    "name": "advisorInfo",
+    "name": "advisorName",
     "outputs": [
       {
         "internalType": "string",
-        "name": "name",
+        "name": "",
         "type": "string"
-      },
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "address",
-        "name": "stablePool",
+        "name": "account",
         "type": "address"
-      },
-      {
-        "internalType": "address payable",
-        "name": "volatilePool",
-        "type": "address"
-      },
+      }
+    ],
+    "name": "advisorVolatilePool",
+    "outputs": [
       {
         "internalType": "address",
-        "name": "stablePoolToken",
+        "name": "",
         "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "volatilePoolToken",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "stablePoolShare",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "volatilePoolShare",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "mstableInvestmentProportion",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "yearnInvestmentProportion",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -286,12 +227,128 @@
     "inputs": [
       {
         "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "getAdvisors",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getETHVault",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "ethVault",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_advisor",
+        "type": "address"
+      }
+    ],
+    "name": "getStablePoolValue",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getUSDCVault",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "usdcVault",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_advisor",
+        "type": "address"
+      }
+    ],
+    "name": "getVolatilePoolValue",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "_stableProxyAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_volatileProxyAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_volatileProtocolStableCoinProportion",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_volatileProtocolVolatileCoinProportion",
+        "type": "uint256"
+      }
+    ],
+    "name": "initialize",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_stablecoin",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_stablecoinAmount",
+        "name": "_totalInvest",
         "type": "uint256"
       },
       {
@@ -319,31 +376,35 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "",
+        "name": "account",
         "type": "address"
       }
     ],
-    "name": "investorInfo",
+    "name": "investorStableLiquidity",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "stablePoolLiquidity",
+        "name": "",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "volatilePoolLiquidity",
-        "type": "uint256"
-      },
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "address",
-        "name": "advisor",
+        "name": "account",
         "type": "address"
-      },
+      }
+    ],
+    "name": "investorVolatileLiquidity",
+    "outputs": [
       {
-        "internalType": "bool",
-        "name": "status",
-        "type": "bool"
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -384,57 +445,9 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_stableCoinAmount",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
         "name": "_stablecoin",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_mstableInvestmentProportion",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_yearnInvestmentProportion",
-        "type": "uint256"
-      }
-    ],
-    "name": "onboard",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_mstableInvestmentAsset",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_mstableInvestmentAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "_yearnInvestmentAmounts",
-        "type": "uint256[]"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_yearnVaults",
-        "type": "address[]"
       }
     ],
     "name": "protocolInvestment",
@@ -456,29 +469,11 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "stableProxyBaseAddress",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
         "name": "_advisor",
         "type": "address"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_vault",
-        "type": "address[]"
       },
       {
         "internalType": "address",
@@ -489,19 +484,6 @@
     "name": "unwind",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "volatileProxyBaseAddress",
-    "outputs": [
-      {
-        "internalType": "address payable",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   }
 ]

@@ -47,20 +47,12 @@ export class AdvisorOnBoarded__Params {
     return this._event.parameters[5].value.toAddress();
   }
 
-  get stablePoolShare(): BigInt {
+  get volatileProtocolStableCoinProportion(): BigInt {
     return this._event.parameters[6].value.toBigInt();
   }
 
-  get volatilePoolShare(): BigInt {
+  get volatileProtocolVolatileCoinProportion(): BigInt {
     return this._event.parameters[7].value.toBigInt();
-  }
-
-  get mstableInvestmentProportion(): BigInt {
-    return this._event.parameters[8].value.toBigInt();
-  }
-
-  get yearnInvestmentProportion(): BigInt {
-    return this._event.parameters[9].value.toBigInt();
   }
 }
 
@@ -160,132 +152,51 @@ export class Unwind__Params {
   }
 }
 
-export class NewfiAdvisor__advisorInfoResult {
-  value0: string;
-  value1: Address;
-  value2: Address;
-  value3: Address;
-  value4: Address;
-  value5: BigInt;
-  value6: BigInt;
-  value7: BigInt;
-  value8: BigInt;
-
-  constructor(
-    value0: string,
-    value1: Address,
-    value2: Address,
-    value3: Address,
-    value4: Address,
-    value5: BigInt,
-    value6: BigInt,
-    value7: BigInt,
-    value8: BigInt
-  ) {
-    this.value0 = value0;
-    this.value1 = value1;
-    this.value2 = value2;
-    this.value3 = value3;
-    this.value4 = value4;
-    this.value5 = value5;
-    this.value6 = value6;
-    this.value7 = value7;
-    this.value8 = value8;
-  }
-
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromString(this.value0));
-    map.set("value1", ethereum.Value.fromAddress(this.value1));
-    map.set("value2", ethereum.Value.fromAddress(this.value2));
-    map.set("value3", ethereum.Value.fromAddress(this.value3));
-    map.set("value4", ethereum.Value.fromAddress(this.value4));
-    map.set("value5", ethereum.Value.fromUnsignedBigInt(this.value5));
-    map.set("value6", ethereum.Value.fromUnsignedBigInt(this.value6));
-    map.set("value7", ethereum.Value.fromUnsignedBigInt(this.value7));
-    map.set("value8", ethereum.Value.fromUnsignedBigInt(this.value8));
-    return map;
-  }
-}
-
-export class NewfiAdvisor__investorInfoResult {
-  value0: BigInt;
-  value1: BigInt;
-  value2: Address;
-  value3: boolean;
-
-  constructor(
-    value0: BigInt,
-    value1: BigInt,
-    value2: Address,
-    value3: boolean
-  ) {
-    this.value0 = value0;
-    this.value1 = value1;
-    this.value2 = value2;
-    this.value3 = value3;
-  }
-
-  toMap(): TypedMap<string, ethereum.Value> {
-    let map = new TypedMap<string, ethereum.Value>();
-    map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
-    map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    map.set("value2", ethereum.Value.fromAddress(this.value2));
-    map.set("value3", ethereum.Value.fromBoolean(this.value3));
-    return map;
-  }
-}
-
 export class NewfiAdvisor extends ethereum.SmartContract {
   static bind(address: Address): NewfiAdvisor {
     return new NewfiAdvisor("NewfiAdvisor", address);
   }
 
-  advisorInfo(param0: Address): NewfiAdvisor__advisorInfoResult {
-    let result = super.call(
-      "advisorInfo",
-      "advisorInfo(address):(string,address,address,address,address,uint256,uint256,uint256,uint256)",
-      [ethereum.Value.fromAddress(param0)]
-    );
+  advisorName(account: Address): string {
+    let result = super.call("advisorName", "advisorName(address):(string)", [
+      ethereum.Value.fromAddress(account)
+    ]);
 
-    return new NewfiAdvisor__advisorInfoResult(
-      result[0].toString(),
-      result[1].toAddress(),
-      result[2].toAddress(),
-      result[3].toAddress(),
-      result[4].toAddress(),
-      result[5].toBigInt(),
-      result[6].toBigInt(),
-      result[7].toBigInt(),
-      result[8].toBigInt()
-    );
+    return result[0].toString();
   }
 
-  try_advisorInfo(
-    param0: Address
-  ): ethereum.CallResult<NewfiAdvisor__advisorInfoResult> {
+  try_advisorName(account: Address): ethereum.CallResult<string> {
+    let result = super.tryCall("advisorName", "advisorName(address):(string)", [
+      ethereum.Value.fromAddress(account)
+    ]);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toString());
+  }
+
+  advisorVolatilePool(account: Address): Address {
+    let result = super.call(
+      "advisorVolatilePool",
+      "advisorVolatilePool(address):(address)",
+      [ethereum.Value.fromAddress(account)]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_advisorVolatilePool(account: Address): ethereum.CallResult<Address> {
     let result = super.tryCall(
-      "advisorInfo",
-      "advisorInfo(address):(string,address,address,address,address,uint256,uint256,uint256,uint256)",
-      [ethereum.Value.fromAddress(param0)]
+      "advisorVolatilePool",
+      "advisorVolatilePool(address):(address)",
+      [ethereum.Value.fromAddress(account)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new NewfiAdvisor__advisorInfoResult(
-        value[0].toString(),
-        value[1].toAddress(),
-        value[2].toAddress(),
-        value[3].toAddress(),
-        value[4].toAddress(),
-        value[5].toBigInt(),
-        value[6].toBigInt(),
-        value[7].toBigInt(),
-        value[8].toBigInt()
-      )
-    );
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
   advisors(param0: BigInt): Address {
@@ -333,41 +244,147 @@ export class NewfiAdvisor extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  investorInfo(param0: Address): NewfiAdvisor__investorInfoResult {
-    let result = super.call(
-      "investorInfo",
-      "investorInfo(address):(uint256,uint256,address,bool)",
-      [ethereum.Value.fromAddress(param0)]
-    );
+  getAdvisors(account: Address): Array<Address> {
+    let result = super.call("getAdvisors", "getAdvisors(address):(address[])", [
+      ethereum.Value.fromAddress(account)
+    ]);
 
-    return new NewfiAdvisor__investorInfoResult(
-      result[0].toBigInt(),
-      result[1].toBigInt(),
-      result[2].toAddress(),
-      result[3].toBoolean()
-    );
+    return result[0].toAddressArray();
   }
 
-  try_investorInfo(
-    param0: Address
-  ): ethereum.CallResult<NewfiAdvisor__investorInfoResult> {
+  try_getAdvisors(account: Address): ethereum.CallResult<Array<Address>> {
     let result = super.tryCall(
-      "investorInfo",
-      "investorInfo(address):(uint256,uint256,address,bool)",
-      [ethereum.Value.fromAddress(param0)]
+      "getAdvisors",
+      "getAdvisors(address):(address[])",
+      [ethereum.Value.fromAddress(account)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(
-      new NewfiAdvisor__investorInfoResult(
-        value[0].toBigInt(),
-        value[1].toBigInt(),
-        value[2].toAddress(),
-        value[3].toBoolean()
-      )
+    return ethereum.CallResult.fromValue(value[0].toAddressArray());
+  }
+
+  getETHVault(): Address {
+    let result = super.call("getETHVault", "getETHVault():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_getETHVault(): ethereum.CallResult<Address> {
+    let result = super.tryCall("getETHVault", "getETHVault():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getStablePoolValue(_advisor: Address): BigInt {
+    let result = super.call(
+      "getStablePoolValue",
+      "getStablePoolValue(address):(uint256)",
+      [ethereum.Value.fromAddress(_advisor)]
     );
+
+    return result[0].toBigInt();
+  }
+
+  try_getStablePoolValue(_advisor: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getStablePoolValue",
+      "getStablePoolValue(address):(uint256)",
+      [ethereum.Value.fromAddress(_advisor)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getUSDCVault(): Address {
+    let result = super.call("getUSDCVault", "getUSDCVault():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_getUSDCVault(): ethereum.CallResult<Address> {
+    let result = super.tryCall("getUSDCVault", "getUSDCVault():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getVolatilePoolValue(_advisor: Address): BigInt {
+    let result = super.call(
+      "getVolatilePoolValue",
+      "getVolatilePoolValue(address):(uint256)",
+      [ethereum.Value.fromAddress(_advisor)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_getVolatilePoolValue(_advisor: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getVolatilePoolValue",
+      "getVolatilePoolValue(address):(uint256)",
+      [ethereum.Value.fromAddress(_advisor)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  investorStableLiquidity(account: Address): BigInt {
+    let result = super.call(
+      "investorStableLiquidity",
+      "investorStableLiquidity(address):(uint256)",
+      [ethereum.Value.fromAddress(account)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_investorStableLiquidity(account: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "investorStableLiquidity",
+      "investorStableLiquidity(address):(uint256)",
+      [ethereum.Value.fromAddress(account)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  investorVolatileLiquidity(account: Address): BigInt {
+    let result = super.call(
+      "investorVolatileLiquidity",
+      "investorVolatileLiquidity(address):(uint256)",
+      [ethereum.Value.fromAddress(account)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_investorVolatileLiquidity(account: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "investorVolatileLiquidity",
+      "investorVolatileLiquidity(address):(uint256)",
+      [ethereum.Value.fromAddress(account)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   investors(param0: BigInt): Address {
@@ -426,94 +443,6 @@ export class NewfiAdvisor extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
-
-  stableProxyBaseAddress(): Address {
-    let result = super.call(
-      "stableProxyBaseAddress",
-      "stableProxyBaseAddress():(address)",
-      []
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_stableProxyBaseAddress(): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "stableProxyBaseAddress",
-      "stableProxyBaseAddress():(address)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  volatileProxyBaseAddress(): Address {
-    let result = super.call(
-      "volatileProxyBaseAddress",
-      "volatileProxyBaseAddress():(address)",
-      []
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_volatileProxyBaseAddress(): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "volatileProxyBaseAddress",
-      "volatileProxyBaseAddress():(address)",
-      []
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-}
-
-export class ConstructorCall extends ethereum.Call {
-  get inputs(): ConstructorCall__Inputs {
-    return new ConstructorCall__Inputs(this);
-  }
-
-  get outputs(): ConstructorCall__Outputs {
-    return new ConstructorCall__Outputs(this);
-  }
-}
-
-export class ConstructorCall__Inputs {
-  _call: ConstructorCall;
-
-  constructor(call: ConstructorCall) {
-    this._call = call;
-  }
-
-  get _stableproxy(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _volatileproxy(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get _massetAddress(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-
-  get _savingsContract(): Address {
-    return this._call.inputValues[3].value.toAddress();
-  }
-}
-
-export class ConstructorCall__Outputs {
-  _call: ConstructorCall;
-
-  constructor(call: ConstructorCall) {
-    this._call = call;
-  }
 }
 
 export class DeployMinimalCall extends ethereum.Call {
@@ -554,6 +483,52 @@ export class DeployMinimalCall__Outputs {
   }
 }
 
+export class InitializeCall extends ethereum.Call {
+  get inputs(): InitializeCall__Inputs {
+    return new InitializeCall__Inputs(this);
+  }
+
+  get outputs(): InitializeCall__Outputs {
+    return new InitializeCall__Outputs(this);
+  }
+}
+
+export class InitializeCall__Inputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
+    this._call = call;
+  }
+
+  get _name(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
+  get _stableProxyAddress(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get _volatileProxyAddress(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+
+  get _volatileProtocolStableCoinProportion(): BigInt {
+    return this._call.inputValues[3].value.toBigInt();
+  }
+
+  get _volatileProtocolVolatileCoinProportion(): BigInt {
+    return this._call.inputValues[4].value.toBigInt();
+  }
+}
+
+export class InitializeCall__Outputs {
+  _call: InitializeCall;
+
+  constructor(call: InitializeCall) {
+    this._call = call;
+  }
+}
+
 export class InvestCall extends ethereum.Call {
   get inputs(): InvestCall__Inputs {
     return new InvestCall__Inputs(this);
@@ -575,7 +550,7 @@ export class InvestCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _stablecoinAmount(): BigInt {
+  get _totalInvest(): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 
@@ -600,52 +575,6 @@ export class InvestCall__Outputs {
   }
 }
 
-export class OnboardCall extends ethereum.Call {
-  get inputs(): OnboardCall__Inputs {
-    return new OnboardCall__Inputs(this);
-  }
-
-  get outputs(): OnboardCall__Outputs {
-    return new OnboardCall__Outputs(this);
-  }
-}
-
-export class OnboardCall__Inputs {
-  _call: OnboardCall;
-
-  constructor(call: OnboardCall) {
-    this._call = call;
-  }
-
-  get _name(): string {
-    return this._call.inputValues[0].value.toString();
-  }
-
-  get _stableCoinAmount(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get _stablecoin(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-
-  get _mstableInvestmentProportion(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-
-  get _yearnInvestmentProportion(): BigInt {
-    return this._call.inputValues[4].value.toBigInt();
-  }
-}
-
-export class OnboardCall__Outputs {
-  _call: OnboardCall;
-
-  constructor(call: OnboardCall) {
-    this._call = call;
-  }
-}
-
 export class ProtocolInvestmentCall extends ethereum.Call {
   get inputs(): ProtocolInvestmentCall__Inputs {
     return new ProtocolInvestmentCall__Inputs(this);
@@ -663,20 +592,8 @@ export class ProtocolInvestmentCall__Inputs {
     this._call = call;
   }
 
-  get _mstableInvestmentAsset(): Address {
+  get _stablecoin(): Address {
     return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _mstableInvestmentAmount(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get _yearnInvestmentAmounts(): Array<BigInt> {
-    return this._call.inputValues[2].value.toBigIntArray();
-  }
-
-  get _yearnVaults(): Array<Address> {
-    return this._call.inputValues[3].value.toAddressArray();
   }
 }
 
@@ -709,12 +626,8 @@ export class UnwindCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get _vault(): Array<Address> {
-    return this._call.inputValues[1].value.toAddressArray();
-  }
-
   get _stablecoin(): Address {
-    return this._call.inputValues[2].value.toAddress();
+    return this._call.inputValues[1].value.toAddress();
   }
 }
 

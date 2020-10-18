@@ -12,12 +12,12 @@ volatilePool: Bytes!
 investors: [Investor!]!
 stablePoolToken: Bytes!
 volatilePoolToken: Bytes!
-stablePoolShare: BigInt!
-volatilePoolShare: BigInt!
 mstableShare: BigInt!
 yearnShare: BigInt!
-stablePoolMStableProportion: BigInt!
-stablePoolYearnProportion: BigInt!
+stablePoolLiquidity: BigInt!
+volatilePoolLiquidity: BigInt!
+volatileProtocolStableCoinProportion: BigInt!
+volatileProtocolVolatileCoinProportion: BigInt!
 fees: BigInt!
 }
 

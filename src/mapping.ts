@@ -9,10 +9,8 @@ export function handleAdvisorOnBoarded(event: AdvisorOnBoarded): void {
   advisor.volatilePool = event.params.volatilePool;
   advisor.stablePoolToken = event.params.stablePoolToken;
   advisor.volatilePoolToken = event.params.volatilePoolToken;
-  advisor.stablePoolShare = event.params.stablePoolShare;
-  advisor.volatilePoolShare = event.params.volatilePoolShare;
-  advisor.stablePoolMStableProportion = event.params.mstableInvestmentProportion;
-  advisor.stablePoolYearnProportion = event.params.yearnInvestmentProportion;
+  advisor.volatileProtocolStableCoinProportion = event.params.volatileProtocolStableCoinProportion;
+  advisor.volatileProtocolVolatileCoinProportion = event.params.volatileProtocolVolatileCoinProportion;
   advisor.mstableShare = null;
   advisor.yearnShare = null;
   advisor.investors = new Array<string>();
@@ -35,8 +33,8 @@ export function handleInvestment(event: Investment): void {
   }
   let advisorAddress = event.params._advisor;
   let advisor = Advisor.load(advisorAddress.toHex())
-  advisor.stablePoolShare =  advisor.stablePoolShare + investor.stablePoolShare;
-  advisor.volatilePoolShare =  advisor.volatilePoolShare + investor.volatilePoolShare;
+  advisor.stablePoolLiquidity =  advisor.stablePoolLiquidity + investor.stablePoolShare;
+  advisor.volatilePoolLiquidity =  advisor.volatilePoolLiquidity + investor.volatilePoolShare;
 
   let investors = advisor.investors 
   if (!investors.includes(investor.id)) {

@@ -145,24 +145,6 @@ export class Advisor extends Entity {
     this.set("volatilePoolToken", Value.fromBytes(value));
   }
 
-  get stablePoolShare(): BigInt {
-    let value = this.get("stablePoolShare");
-    return value.toBigInt();
-  }
-
-  set stablePoolShare(value: BigInt) {
-    this.set("stablePoolShare", Value.fromBigInt(value));
-  }
-
-  get volatilePoolShare(): BigInt {
-    let value = this.get("volatilePoolShare");
-    return value.toBigInt();
-  }
-
-  set volatilePoolShare(value: BigInt) {
-    this.set("volatilePoolShare", Value.fromBigInt(value));
-  }
-
   get mstableShare(): BigInt {
     let value = this.get("mstableShare");
     return value.toBigInt();
@@ -181,22 +163,40 @@ export class Advisor extends Entity {
     this.set("yearnShare", Value.fromBigInt(value));
   }
 
-  get stablePoolMStableProportion(): BigInt {
-    let value = this.get("stablePoolMStableProportion");
+  get stablePoolLiquidity(): BigInt {
+    let value = this.get("stablePoolLiquidity");
     return value.toBigInt();
   }
 
-  set stablePoolMStableProportion(value: BigInt) {
-    this.set("stablePoolMStableProportion", Value.fromBigInt(value));
+  set stablePoolLiquidity(value: BigInt) {
+    this.set("stablePoolLiquidity", Value.fromBigInt(value));
   }
 
-  get stablePoolYearnProportion(): BigInt {
-    let value = this.get("stablePoolYearnProportion");
+  get volatilePoolLiquidity(): BigInt {
+    let value = this.get("volatilePoolLiquidity");
     return value.toBigInt();
   }
 
-  set stablePoolYearnProportion(value: BigInt) {
-    this.set("stablePoolYearnProportion", Value.fromBigInt(value));
+  set volatilePoolLiquidity(value: BigInt) {
+    this.set("volatilePoolLiquidity", Value.fromBigInt(value));
+  }
+
+  get volatileProtocolStableCoinProportion(): BigInt {
+    let value = this.get("volatileProtocolStableCoinProportion");
+    return value.toBigInt();
+  }
+
+  set volatileProtocolStableCoinProportion(value: BigInt) {
+    this.set("volatileProtocolStableCoinProportion", Value.fromBigInt(value));
+  }
+
+  get volatileProtocolVolatileCoinProportion(): BigInt {
+    let value = this.get("volatileProtocolVolatileCoinProportion");
+    return value.toBigInt();
+  }
+
+  set volatileProtocolVolatileCoinProportion(value: BigInt) {
+    this.set("volatileProtocolVolatileCoinProportion", Value.fromBigInt(value));
   }
 
   get fees(): BigInt {
