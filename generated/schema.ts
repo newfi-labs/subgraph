@@ -145,22 +145,22 @@ export class Advisor extends Entity {
     this.set("volatilePoolToken", Value.fromBytes(value));
   }
 
-  get mstableShare(): BigInt {
-    let value = this.get("mstableShare");
+  get stablePoolLiquidityValue(): BigInt {
+    let value = this.get("stablePoolLiquidityValue");
     return value.toBigInt();
   }
 
-  set mstableShare(value: BigInt) {
-    this.set("mstableShare", Value.fromBigInt(value));
+  set stablePoolLiquidityValue(value: BigInt) {
+    this.set("stablePoolLiquidityValue", Value.fromBigInt(value));
   }
 
-  get yearnShare(): BigInt {
-    let value = this.get("yearnShare");
+  get volatilePoolLiquidityValue(): BigInt {
+    let value = this.get("volatilePoolLiquidityValue");
     return value.toBigInt();
   }
 
-  set yearnShare(value: BigInt) {
-    this.set("yearnShare", Value.fromBigInt(value));
+  set volatilePoolLiquidityValue(value: BigInt) {
+    this.set("volatilePoolLiquidityValue", Value.fromBigInt(value));
   }
 
   get stablePoolLiquidity(): BigInt {

@@ -2,6 +2,7 @@
 
 pragma solidity ^0.6.0;
 
+<<<<<<< HEAD
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol";
@@ -11,6 +12,17 @@ import "./proxy/StablePoolProxy.sol";
 import "./proxy/VolatilePoolProxy.sol";
 import "./utils/ProxyFactory.sol";
 import "./utils/AggregatorInterface.sol";
+=======
+import '@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/IERC20.sol';
+import '@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/SafeERC20.sol';
+import '@openzeppelin/contracts-ethereum-package/contracts/utils/ReentrancyGuard.sol';
+import '@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol';
+import '@openzeppelin/contracts-ethereum-package/contracts/access/Ownable.sol';
+import './proxy/StablePoolProxy.sol';
+import './proxy/VolatilePoolProxy.sol';
+import './utils/ProxyFactory.sol';
+import './utils/AggregatorInterface.sol';
+>>>>>>> d97e3584da3bc2fe649c6f20edec35ab7488b6b3
 
 contract NewfiAdvisor is
     Initializable,
@@ -37,6 +49,7 @@ contract NewfiAdvisor is
         uint256 _stablecoinAmount,
         uint256 _volatileAmount,
         address indexed _advisor
+<<<<<<< HEAD
     );
 
     event ProtocolInvestment(
@@ -45,6 +58,16 @@ contract NewfiAdvisor is
         uint256 yearnShare
     );
 
+=======
+    );
+
+    event ProtocolInvestment(
+        address indexed advisor,
+        uint256 mstableShare,
+        uint256 yearnShare
+    );
+
+>>>>>>> d97e3584da3bc2fe649c6f20edec35ab7488b6b3
     event Unwind(address indexed advisor, uint256 fess);
 
     struct Advisor {
@@ -77,12 +100,35 @@ contract NewfiAdvisor is
     // in order to be used in the test cases
     address
         public constant massetAddress = 0xe2f2a5C287993345a840Db3B0845fbC70f5935a5;
+<<<<<<< HEAD
+
+    address
+        public constant savingContract = 0xcf3F73290803Fc04425BEE135a4Caeb2BaB2C2A1;
+
+    address
+        internal constant fiatRef = 0x986b5E1e1755e3C2440e960477f25201B0a8bbD4;
+
+    address public stableProxyBaseAddress;
+
+    address payable public volatileProxyBaseAddress;
+
+    /**
+        Constructor
+        @param _stableproxy address of stable proxy contract.
+        @param _volatileproxy address of volatile proxy contract.
+     */
+    constructor(address _stableproxy, address payable _volatileproxy) public {
+        stableProxyBaseAddress = _stableproxy;
+        volatileProxyBaseAddress = _volatileproxy;
+    }
+=======
 
     address
         public constant savingContract = 0xcf3F73290803Fc04425BEE135a4Caeb2BaB2C2A1;
     // usdc/eth aggregator
     address
         internal constant fiatRef = 0x986b5E1e1755e3C2440e960477f25201B0a8bbD4;
+>>>>>>> d97e3584da3bc2fe649c6f20edec35ab7488b6b3
 
     /**
         Onboards a new Advisor
@@ -92,24 +138,43 @@ contract NewfiAdvisor is
      */
     function initialize(
         string calldata _name,
+<<<<<<< HEAD
+        // for volstile pool since volatile pool will be used for yearn investment
+=======
         address _stableProxyAddress,
         address _volatileProxyAddress,
         // for volatile pool since volatile pool will be used for yearn investment
+>>>>>>> d97e3584da3bc2fe649c6f20edec35ab7488b6b3
         uint256 _volatileProtocolStableCoinProportion,
         uint256 _volatileProtocolVolatileCoinProportion
     ) external payable {
         require(
             advisorInfo[msg.sender].stablePool == address(0),
+<<<<<<< HEAD
             "Advisor exists"
+=======
+            'Advisor exists'
+>>>>>>> d97e3584da3bc2fe649c6f20edec35ab7488b6b3
         );
         require(
             _volatileProtocolStableCoinProportion != 0 ||
                 _volatileProtocolVolatileCoinProportion != 0,
+<<<<<<< HEAD
             "Both Stable Proportions are 0"
+        );
+
+        address stablePool = createProxyPool(stableProxyBaseAddress);
+        address volatilePool = createProxyPool(volatileProxyBaseAddress);
+=======
+            'Both Stable Proportions are 0'
         );
         // msg.sender here would eb the advisor address
         address stablePool = createProxyPool(_stableProxyAddress, msg.sender);
-        address volatilePool = createProxyPool(_volatileProxyAddress, msg.sender);
+        address volatilePool = createProxyPool(
+            _volatileProxyAddress,
+            msg.sender
+        );
+>>>>>>> d97e3584da3bc2fe649c6f20edec35ab7488b6b3
 
         advisorInfo[msg.sender] = Advisor(
             _name,
@@ -127,8 +192,13 @@ contract NewfiAdvisor is
             _name,
             stablePool,
             volatilePool,
+<<<<<<< HEAD
             address(0),
             address(0),
+=======
+            address(0),
+            address(0),
+>>>>>>> d97e3584da3bc2fe649c6f20edec35ab7488b6b3
             _volatileProtocolStableCoinProportion,
             _volatileProtocolVolatileCoinProportion
         );
@@ -223,7 +293,7 @@ contract NewfiAdvisor is
         Investor storage investor = investorInfo[account];
         bool exists = false;
 
-        for (uint i = 0; i < investor.advisors.length; i++) {
+        for (uint256 i = 0; i < investor.advisors.length; i++) {
             if (advisors[i] == advisor) {
                 exists = true;
             }
@@ -236,12 +306,21 @@ contract NewfiAdvisor is
     /**
         @param _proxy address of proxy.
      */
-    function createProxyPool(address _proxy, address _advisor) internal returns (address) {
-    bytes memory _payload = abi.encodeWithSignature("initialize(address)", _advisor);
-    return deployMinimal(_proxy, _payload);
+    function createProxyPool(address _proxy, address _advisor)
+        internal
+        returns (address)
+    {
+        bytes memory _payload = abi.encodeWithSignature(
+            'initialize(address)',
+            _advisor
+        );
+        return deployMinimal(_proxy, _payload);
     }
 
+<<<<<<< HEAD
     // TODO: ADD TOKEN MINTING AND DISPERSAL LOGIC
+=======
+>>>>>>> d97e3584da3bc2fe649c6f20edec35ab7488b6b3
     /**
         Investor deposits liquidity to advisor pools
         @param _stablecoin address of stablecoin.
@@ -257,19 +336,27 @@ contract NewfiAdvisor is
         address _advisor,
         uint256 _stableProportion,
         uint256 _volatileProportion
-    ) external payable {
+    ) external payable nonReentrant {
+        // Token Dispersal Logic 
+        // if msg.value > 0
+        // AggregatorInterface(fiatRef).latestAnswer().mul(msg.value) --> getting the usdc value of ether deposited
+        // stable pool token price dispersed to the investor = bal of usdc in advisor stable pool / total supply this will give price
+        // stableInvest * price is the tokens advisor gets which will be stable liquidity in struct
+        // volatile pool token price dispersed to the investor = bal of usdc in advisor stable pool (after converted from eth to usdc check 1st comment in this function)/ total supply this will give price
+        // volatilePoolAmount(after converted from eth to usdc check 1st comment in this function) * price is the tokens advisor gets which will be stable liquidity in struct
         require(
             _stableProportion + _volatileProportion == 100,
-            "Need to invest 100% of funds"
+            'Need to invest 100% of funds'
         );
         Advisor storage advisor = advisorInfo[_advisor];
         IERC20 token = IERC20(_stablecoin);
         uint256 stableInvest = (_totalInvest * _stableProportion) / 100;
         uint256 volatileInvest = (_totalInvest * _volatileProportion) / 100;
-        // converting to wei 10**18
-        volatileInvest = volatileInvest.mul(10**12);
+<<<<<<< HEAD
         // getting the total amount in volatile pool
         uint256 volatilePoolAmount = volatileInvest.add(msg.value);
+=======
+>>>>>>> d97e3584da3bc2fe649c6f20edec35ab7488b6b3
 
         if (stableInvest > 0) {
             token.safeTransferFrom(
@@ -286,9 +373,13 @@ contract NewfiAdvisor is
             );
         }
         if (msg.value > 0) {
-            (bool success, ) = advisor.volatilePool.call{value: msg.value}("");
-            require(success, "Transfer failed.");
+            (bool success, ) = advisor.volatilePool.call{value: msg.value}('');
+            require(success, 'Transfer failed.');
         }
+        // converting to wei 10**18
+        volatileInvest = volatileInvest.mul(10**12);
+        // getting the total amount in volatile pool
+        uint256 volatilePoolAmount = volatileInvest.add(msg.value);
 
         Investor storage investor = investorInfo[msg.sender];
         if (investor.doesExist) {
@@ -318,7 +409,11 @@ contract NewfiAdvisor is
         @param _stablecoin address of stablecoin to invest in mstable, will take usdc for hack.
         // IMP NOTE => _mstableInvestmentAmount & _yearnInvestmentAmountsw will be based on the advisors mstable and yearn proportions
      */
+<<<<<<< HEAD
+    function protocolInvestment(address _stablecoin) external nonReentrant {
+=======
     function protocolInvestment(address _stablecoin) external {
+>>>>>>> d97e3584da3bc2fe649c6f20edec35ab7488b6b3
         Advisor storage advisor = advisorInfo[msg.sender];
         IERC20 token = IERC20(_stablecoin);
         uint256 stableProtocolInvestmentAmount = token.balanceOf(
@@ -359,7 +454,11 @@ contract NewfiAdvisor is
         @param _advisor Address of the advisor.
         @param _stablecoin address of stablecoin to invest in mstable, will take usdc for hack.
      */
+<<<<<<< HEAD
+    function unwind(address _advisor, address _stablecoin) external nonReentrant {
+=======
     function unwind(address _advisor, address _stablecoin) external {
+>>>>>>> d97e3584da3bc2fe649c6f20edec35ab7488b6b3
         Investor storage investor = investorInfo[msg.sender];
         Advisor storage advisor = advisorInfo[_advisor];
 

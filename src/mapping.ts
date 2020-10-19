@@ -1,5 +1,6 @@
-import { AdvisorOnBoarded, Investment, ProtocolInvestment, Unwind } from '../generated/NewfiAdvisor/NewfiAdvisor'
+import { AdvisorOnBoarded, Investment, ProtocolInvestment, Unwind, NewfiAdvisor } from '../generated/NewfiAdvisor/NewfiAdvisor'
 import { Investor, Advisor } from '../generated/schema'
+import { BigInt } from '@graphprotocol/graph-ts'
 
 
 export function handleAdvisorOnBoarded(event: AdvisorOnBoarded): void {
@@ -11,14 +12,15 @@ export function handleAdvisorOnBoarded(event: AdvisorOnBoarded): void {
   advisor.volatilePoolToken = event.params.volatilePoolToken;
   advisor.volatileProtocolStableCoinProportion = event.params.volatileProtocolStableCoinProportion;
   advisor.volatileProtocolVolatileCoinProportion = event.params.volatileProtocolVolatileCoinProportion;
-  advisor.mstableShare = null;
-  advisor.yearnShare = null;
+  advisor.stablePoolLiquidityValue = BigInt.fromI32(0);
+  advisor.volatilePoolLiquidityValue = BigInt.fromI32(0);
   advisor.investors = new Array<string>();
-  advisor.fees = null;
+  advisor.fees = BigInt.fromI32(0);
   advisor.save()
 }
 
 export function handleInvestment(event: Investment): void {
+  let contract = NewfiAdvisor.bind(event.address);
   let investorAddress = event.params.investor;
   let investor = Investor.load(investorAddress.toHex())
   if (investor == null) {
@@ -28,13 +30,15 @@ export function handleInvestment(event: Investment): void {
     investor.advisors = new Array<string>();
   }
   else {
-    investor.stablePoolShare = investor.stablePoolShare + event.params._stablecoinAmount;
-    investor.volatilePoolShare = investor.volatilePoolShare + event.params._volatileAmount;
+    investor.stablePoolShare = investor.stablePoolShare.plus(event.params._stablecoinAmount);
+    investor.volatilePoolShare = investor.volatilePoolShare.plus(event.params._volatileAmount);
   }
   let advisorAddress = event.params._advisor;
   let advisor = Advisor.load(advisorAddress.toHex())
-  advisor.stablePoolLiquidity =  advisor.stablePoolLiquidity + investor.stablePoolShare;
-  advisor.volatilePoolLiquidity =  advisor.volatilePoolLiquidity + investor.volatilePoolShare;
+  advisor.stablePoolLiquidity =  advisor.stablePoolLiquidity.plus(investor.stablePoolShare);
+  advisor.volatilePoolLiquidity =  advisor.volatilePoolLiquidity.plus(investor.volatilePoolShare);
+  advisor.stablePoolLiquidityValue = advisor.stablePoolLiquidityValue.plus(contract.getStablePoolValue(advisorAddress));
+  advisor.volatilePoolLiquidityValue = advisor.stablePoolLiquidityValue.plus(contract.getVolatilePoolValue(advisorAddress));
 
   let investors = advisor.investors 
   if (!investors.includes(investor.id)) {
@@ -51,16 +55,17 @@ export function handleInvestment(event: Investment): void {
 }
 
 export function handleProtocolInvestment(event: ProtocolInvestment): void {
+  let contract = NewfiAdvisor.bind(event.address);
   let advisorAddress = event.params.advisor;
   let advisor = Advisor.load(advisorAddress.toHex())
-  advisor.mstableShare = advisor.mstableShare + event.params.mstableShare;
-  advisor.yearnShare = advisor.yearnShare + event.params.yearnShare;
+  advisor.stablePoolLiquidityValue = advisor.stablePoolLiquidityValue.plus(event.params.mstableShare).plus(contract.getStablePoolValue(advisorAddress));
+  advisor.stablePoolLiquidityValue = advisor.volatilePoolLiquidityValue.plus(event.params.yearnShare).plus(contract.getVolatilePoolValue(advisorAddress));
   advisor.save()
 }
 
 export function handleUnwind(event: Unwind): void {
   let advisorAddress = event.params.advisor;
   let advisor = Advisor.load(advisorAddress.toHex())
-  advisor.fees = advisor.fees + event.params.fess;
+  advisor.fees = advisor.fees.plus(event.params.fess);
   advisor.save()
 }

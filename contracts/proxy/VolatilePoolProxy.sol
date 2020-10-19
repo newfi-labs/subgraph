@@ -2,9 +2,9 @@
 
 pragma solidity ^0.6.0;
 
-import "@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/SafeERC20.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol";
-import "@openzeppelin/contracts-ethereum-package/contracts/access/Ownable.sol";
+import '@openzeppelin/contracts-ethereum-package/contracts/token/ERC20/SafeERC20.sol';
+import '@openzeppelin/contracts-ethereum-package/contracts/Initializable.sol';
+import '@openzeppelin/contracts-ethereum-package/contracts/access/Ownable.sol';
 
 contract Helper {
     /**
@@ -72,18 +72,28 @@ contract VolatilePoolProxy is Initializable, OwnableUpgradeSafe, Helper {
      */
     function investYearn(uint256 stableAssetAmount, uint256 volatileAssetAmount)
         external
+<<<<<<< HEAD
     {   require(volatileAssetAmount > 0 || stableAssetAmount > 0, "Both Amounts cannot be 0");
+=======
+    {
+        require(
+            volatileAssetAmount > 0 || stableAssetAmount > 0,
+            'Both Amounts cannot be 0'
+        );
+>>>>>>> d97e3584da3bc2fe649c6f20edec35ab7488b6b3
         if (volatileAssetAmount > 0) {
             YearnVault(getETHVault()).depositETH{value: volatileAssetAmount}();
         }
-        // converting to usdc i.e 10**6 before depositing
         if (stableAssetAmount > 0) {
-            YearnVault(getUSDCVault()).deposit(stableAssetAmount.div(10**12));
+            YearnVault(getUSDCVault()).deposit(stableAssetAmount);
         }
     }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> d97e3584da3bc2fe649c6f20edec35ab7488b6b3
     /**
         Advisor redeems lquidity from the stable protocol
         @param _investor investor address
@@ -95,7 +105,7 @@ contract VolatilePoolProxy is Initializable, OwnableUpgradeSafe, Helper {
         @param volatileProtocolVolatileCoinProportion volatile coin proportion in volatile pool.
         // Reusing some vars due to stack too deep error
      */
-  function redeemAmount(
+    function redeemAmount(
         address _investor,
         address _advisor,
         address _stablecoin,
@@ -109,7 +119,11 @@ contract VolatilePoolProxy is Initializable, OwnableUpgradeSafe, Helper {
         uint256 investorRedeemAmount = 0;
         require(
             _investorVolatilePoolLiquidity > 0,
+<<<<<<< HEAD
             "No Volatile Pool Liquidity"
+=======
+            'No Volatile Pool Liquidity'
+>>>>>>> d97e3584da3bc2fe649c6f20edec35ab7488b6b3
         );
         // had to reduce vars due to sol stack too deep error
         // investor token share * pool token price
@@ -136,6 +150,7 @@ contract VolatilePoolProxy is Initializable, OwnableUpgradeSafe, Helper {
                 volatileAssetFees
             );
             (bool ethTransferCheck, ) = _advisor.call{value: volatileAssetFees}(
+<<<<<<< HEAD
                 ""
             );
             require(ethTransferCheck, "Advisor Transfer failed.");
@@ -150,9 +165,41 @@ contract VolatilePoolProxy is Initializable, OwnableUpgradeSafe, Helper {
             .mul(volatileProtocolStableCoinProportion)
             .div(100)
             .mul(
-            (YearnVault(getUSDCVault()).balanceOf(address(this)).mul(10**12)).div(
+            YearnVault(getUSDCVault()).balanceOf(address(this)).div(
                 IERC20(advisorVolatilePoolToken).totalSupply()
             )
+        );
+        YearnVault(getUSDCVault()).withdraw(investorRedeemAmount);
+        // resassigning var to avoid stack too deep
+        _investorVolatilePoolLiquidity = getInvestorReturnAmount(
+            getUSDCVault(),
+            investorRedeemAmount
+        );
+        if (_investor != _advisor) {
+            // 1 % per investor
+            stableAssetFees = (_investorVolatilePoolLiquidity.mul(1)).div(100);
+            _investorVolatilePoolLiquidity = _investorVolatilePoolLiquidity.sub(
+                stableAssetFees
+            );
+            IERC20(_stablecoin).safeTransfer(_advisor, stableAssetFees);
+        }
+=======
+                ''
+            );
+            require(ethTransferCheck, 'Advisor Transfer failed.');
+        }
+
+        (bool ethTransferCheck, ) = _investor.call{
+            value: _investorVolatilePoolLiquidity
+        }('');
+        require(ethTransferCheck, 'Investor Transfer failed.');
+        // get the yearn stable pool proportion set by advisor and get the invesors share based on it
+        investorRedeemAmount = _investorVolatilePoolLiquidity
+            .mul(volatileProtocolStableCoinProportion)
+            .div(100)
+            .mul(
+            (YearnVault(getUSDCVault()).balanceOf(address(this)).mul(10**12))
+                .div(IERC20(advisorVolatilePoolToken).totalSupply())
         );
         YearnVault(getUSDCVault()).withdraw(investorRedeemAmount.div(10**12));
         // resassigning var to avoid stack too deep
@@ -168,6 +215,7 @@ contract VolatilePoolProxy is Initializable, OwnableUpgradeSafe, Helper {
             );
             IERC20(_stablecoin).safeTransfer(_advisor, stableAssetFees);
         }
+>>>>>>> d97e3584da3bc2fe649c6f20edec35ab7488b6b3
         IERC20(_stablecoin).safeTransfer(
             _investor,
             _investorVolatilePoolLiquidity
