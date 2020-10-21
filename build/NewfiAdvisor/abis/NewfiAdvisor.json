@@ -1,5 +1,26 @@
 [
   {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_stablePool",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_volatilePool",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
     "anonymous": false,
     "inputs": [
       {
@@ -41,13 +62,13 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "volatileProtocolStableCoinProportion",
+        "name": "stableCoinMstableProportion",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "volatileProtocolVolatileCoinProportion",
+        "name": "stableCoinYearnProportion",
         "type": "uint256"
       }
     ],
@@ -162,6 +183,38 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "advisorToken",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "advisorTokens",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -197,6 +250,29 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_name",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_stableCoinMstableProportion",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_stableCoinYearnProportion",
+        "type": "uint256"
+      }
+    ],
+    "name": "createAdvisor",
+    "outputs": [],
+    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -243,19 +319,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "getETHVault",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "ethVault",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "address",
@@ -290,6 +353,25 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_ethAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "getUsdcQuote",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_advisor",
         "type": "address"
@@ -309,39 +391,6 @@
   {
     "inputs": [
       {
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
-      },
-      {
-        "internalType": "address",
-        "name": "_stableProxyAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_volatileProxyAddress",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_volatileProtocolStableCoinProportion",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_volatileProtocolVolatileCoinProportion",
-        "type": "uint256"
-      }
-    ],
-    "name": "initialize",
-    "outputs": [],
-    "stateMutability": "payable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
         "name": "_stablecoin",
         "type": "address"
@@ -355,16 +404,6 @@
         "internalType": "address",
         "name": "_advisor",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_stableProportion",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_volatileProportion",
-        "type": "uint256"
       }
     ],
     "name": "invest",
@@ -381,6 +420,25 @@
       }
     ],
     "name": "investorStableLiquidity",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_advisor",
+        "type": "address"
+      }
+    ],
+    "name": "investorStablePoolTokens",
     "outputs": [
       {
         "internalType": "uint256",
@@ -469,6 +527,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "stablePoolProxy",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -484,6 +555,19 @@
     "name": "unwind",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "volatilePoolProxy",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   }
 ]

@@ -16,8 +16,8 @@ stablePoolLiquidityValue: BigInt!
 volatilePoolLiquidityValue: BigInt!
 stablePoolLiquidity: BigInt!
 volatilePoolLiquidity: BigInt!
-volatileProtocolStableCoinProportion: BigInt!
-volatileProtocolVolatileCoinProportion: BigInt!
+stableCoinMstableProportion: BigInt!
+stableCoinYearnProportion: BigInt!
 fees: BigInt!
 }
 

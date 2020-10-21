@@ -47,11 +47,11 @@ export class AdvisorOnBoarded__Params {
     return this._event.parameters[5].value.toAddress();
   }
 
-  get volatileProtocolStableCoinProportion(): BigInt {
+  get stableCoinMstableProportion(): BigInt {
     return this._event.parameters[6].value.toBigInt();
   }
 
-  get volatileProtocolVolatileCoinProportion(): BigInt {
+  get stableCoinYearnProportion(): BigInt {
     return this._event.parameters[7].value.toBigInt();
   }
 }
@@ -176,6 +176,44 @@ export class NewfiAdvisor extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
+  advisorToken(): Address {
+    let result = super.call("advisorToken", "advisorToken():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_advisorToken(): ethereum.CallResult<Address> {
+    let result = super.tryCall("advisorToken", "advisorToken():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  advisorTokens(param0: BigInt): Address {
+    let result = super.call(
+      "advisorTokens",
+      "advisorTokens(uint256):(address)",
+      [ethereum.Value.fromUnsignedBigInt(param0)]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_advisorTokens(param0: BigInt): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "advisorTokens",
+      "advisorTokens(uint256):(address)",
+      [ethereum.Value.fromUnsignedBigInt(param0)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   advisorVolatilePool(account: Address): Address {
     let result = super.call(
       "advisorVolatilePool",
@@ -265,21 +303,6 @@ export class NewfiAdvisor extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddressArray());
   }
 
-  getETHVault(): Address {
-    let result = super.call("getETHVault", "getETHVault():(address)", []);
-
-    return result[0].toAddress();
-  }
-
-  try_getETHVault(): ethereum.CallResult<Address> {
-    let result = super.tryCall("getETHVault", "getETHVault():(address)", []);
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
   getStablePoolValue(_advisor: Address): BigInt {
     let result = super.call(
       "getStablePoolValue",
@@ -316,6 +339,27 @@ export class NewfiAdvisor extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  getUsdcQuote(_ethAmount: BigInt): BigInt {
+    let result = super.call("getUsdcQuote", "getUsdcQuote(uint256):(uint256)", [
+      ethereum.Value.fromUnsignedBigInt(_ethAmount)
+    ]);
+
+    return result[0].toBigInt();
+  }
+
+  try_getUsdcQuote(_ethAmount: BigInt): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "getUsdcQuote",
+      "getUsdcQuote(uint256):(uint256)",
+      [ethereum.Value.fromUnsignedBigInt(_ethAmount)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
   getVolatilePoolValue(_advisor: Address): BigInt {
@@ -356,6 +400,29 @@ export class NewfiAdvisor extends ethereum.SmartContract {
       "investorStableLiquidity",
       "investorStableLiquidity(address):(uint256)",
       [ethereum.Value.fromAddress(account)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  investorStablePoolTokens(_advisor: Address): BigInt {
+    let result = super.call(
+      "investorStablePoolTokens",
+      "investorStablePoolTokens(address):(uint256)",
+      [ethereum.Value.fromAddress(_advisor)]
+    );
+
+    return result[0].toBigInt();
+  }
+
+  try_investorStablePoolTokens(_advisor: Address): ethereum.CallResult<BigInt> {
+    let result = super.tryCall(
+      "investorStablePoolTokens",
+      "investorStablePoolTokens(address):(uint256)",
+      [ethereum.Value.fromAddress(_advisor)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -443,6 +510,128 @@ export class NewfiAdvisor extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
+
+  stablePoolProxy(): Address {
+    let result = super.call(
+      "stablePoolProxy",
+      "stablePoolProxy():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_stablePoolProxy(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "stablePoolProxy",
+      "stablePoolProxy():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
+  volatilePoolProxy(): Address {
+    let result = super.call(
+      "volatilePoolProxy",
+      "volatilePoolProxy():(address)",
+      []
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_volatilePoolProxy(): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "volatilePoolProxy",
+      "volatilePoolProxy():(address)",
+      []
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+}
+
+export class ConstructorCall extends ethereum.Call {
+  get inputs(): ConstructorCall__Inputs {
+    return new ConstructorCall__Inputs(this);
+  }
+
+  get outputs(): ConstructorCall__Outputs {
+    return new ConstructorCall__Outputs(this);
+  }
+}
+
+export class ConstructorCall__Inputs {
+  _call: ConstructorCall;
+
+  constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+
+  get _stablePool(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _volatilePool(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
+  get _token(): Address {
+    return this._call.inputValues[2].value.toAddress();
+  }
+}
+
+export class ConstructorCall__Outputs {
+  _call: ConstructorCall;
+
+  constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+}
+
+export class CreateAdvisorCall extends ethereum.Call {
+  get inputs(): CreateAdvisorCall__Inputs {
+    return new CreateAdvisorCall__Inputs(this);
+  }
+
+  get outputs(): CreateAdvisorCall__Outputs {
+    return new CreateAdvisorCall__Outputs(this);
+  }
+}
+
+export class CreateAdvisorCall__Inputs {
+  _call: CreateAdvisorCall;
+
+  constructor(call: CreateAdvisorCall) {
+    this._call = call;
+  }
+
+  get _name(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
+  get _stableCoinMstableProportion(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get _stableCoinYearnProportion(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+}
+
+export class CreateAdvisorCall__Outputs {
+  _call: CreateAdvisorCall;
+
+  constructor(call: CreateAdvisorCall) {
+    this._call = call;
+  }
 }
 
 export class DeployMinimalCall extends ethereum.Call {
@@ -483,52 +672,6 @@ export class DeployMinimalCall__Outputs {
   }
 }
 
-export class InitializeCall extends ethereum.Call {
-  get inputs(): InitializeCall__Inputs {
-    return new InitializeCall__Inputs(this);
-  }
-
-  get outputs(): InitializeCall__Outputs {
-    return new InitializeCall__Outputs(this);
-  }
-}
-
-export class InitializeCall__Inputs {
-  _call: InitializeCall;
-
-  constructor(call: InitializeCall) {
-    this._call = call;
-  }
-
-  get _name(): string {
-    return this._call.inputValues[0].value.toString();
-  }
-
-  get _stableProxyAddress(): Address {
-    return this._call.inputValues[1].value.toAddress();
-  }
-
-  get _volatileProxyAddress(): Address {
-    return this._call.inputValues[2].value.toAddress();
-  }
-
-  get _volatileProtocolStableCoinProportion(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-
-  get _volatileProtocolVolatileCoinProportion(): BigInt {
-    return this._call.inputValues[4].value.toBigInt();
-  }
-}
-
-export class InitializeCall__Outputs {
-  _call: InitializeCall;
-
-  constructor(call: InitializeCall) {
-    this._call = call;
-  }
-}
-
 export class InvestCall extends ethereum.Call {
   get inputs(): InvestCall__Inputs {
     return new InvestCall__Inputs(this);
@@ -556,14 +699,6 @@ export class InvestCall__Inputs {
 
   get _advisor(): Address {
     return this._call.inputValues[2].value.toAddress();
-  }
-
-  get _stableProportion(): BigInt {
-    return this._call.inputValues[3].value.toBigInt();
-  }
-
-  get _volatileProportion(): BigInt {
-    return this._call.inputValues[4].value.toBigInt();
   }
 }
 

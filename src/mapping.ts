@@ -10,8 +10,8 @@ export function handleAdvisorOnBoarded(event: AdvisorOnBoarded): void {
   advisor.volatilePool = event.params.volatilePool;
   advisor.stablePoolToken = event.params.stablePoolToken;
   advisor.volatilePoolToken = event.params.volatilePoolToken;
-  advisor.volatileProtocolStableCoinProportion = event.params.volatileProtocolStableCoinProportion;
-  advisor.volatileProtocolVolatileCoinProportion = event.params.volatileProtocolVolatileCoinProportion;
+  advisor.stableCoinMstableProportion = event.params.stableCoinMstableProportion;
+  advisor.stableCoinYearnProportion = event.params.stableCoinYearnProportion;
   advisor.stablePoolLiquidityValue = BigInt.fromI32(0);
   advisor.volatilePoolLiquidityValue = BigInt.fromI32(0);
   advisor.investors = new Array<string>();
@@ -59,7 +59,7 @@ export function handleProtocolInvestment(event: ProtocolInvestment): void {
   let advisorAddress = event.params.advisor;
   let advisor = Advisor.load(advisorAddress.toHex())
   advisor.stablePoolLiquidityValue = advisor.stablePoolLiquidityValue.plus(event.params.mstableShare).plus(contract.getStablePoolValue(advisorAddress));
-  advisor.stablePoolLiquidityValue = advisor.volatilePoolLiquidityValue.plus(event.params.yearnShare).plus(contract.getVolatilePoolValue(advisorAddress));
+  advisor.stablePoolLiquidityValue = advisor.volatilePoolLiquidityValue.plus(contract.getVolatilePoolValue(advisorAddress));
   advisor.save()
 }
 

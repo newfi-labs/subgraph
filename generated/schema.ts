@@ -181,22 +181,22 @@ export class Advisor extends Entity {
     this.set("volatilePoolLiquidity", Value.fromBigInt(value));
   }
 
-  get volatileProtocolStableCoinProportion(): BigInt {
-    let value = this.get("volatileProtocolStableCoinProportion");
+  get stableCoinMstableProportion(): BigInt {
+    let value = this.get("stableCoinMstableProportion");
     return value.toBigInt();
   }
 
-  set volatileProtocolStableCoinProportion(value: BigInt) {
-    this.set("volatileProtocolStableCoinProportion", Value.fromBigInt(value));
+  set stableCoinMstableProportion(value: BigInt) {
+    this.set("stableCoinMstableProportion", Value.fromBigInt(value));
   }
 
-  get volatileProtocolVolatileCoinProportion(): BigInt {
-    let value = this.get("volatileProtocolVolatileCoinProportion");
+  get stableCoinYearnProportion(): BigInt {
+    let value = this.get("stableCoinYearnProportion");
     return value.toBigInt();
   }
 
-  set volatileProtocolVolatileCoinProportion(value: BigInt) {
-    this.set("volatileProtocolVolatileCoinProportion", Value.fromBigInt(value));
+  set stableCoinYearnProportion(value: BigInt) {
+    this.set("stableCoinYearnProportion", Value.fromBigInt(value));
   }
 
   get fees(): BigInt {
